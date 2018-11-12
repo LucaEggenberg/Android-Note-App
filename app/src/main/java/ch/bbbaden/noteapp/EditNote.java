@@ -27,8 +27,8 @@ public class EditNote extends AppCompatActivity {
         title = findViewById(R.id.editTextNote);
         text = findViewById(R.id.editTextDescr);
 
-        title.setText(MainActivity.selectedNote.getTitle());
-        text.setText(MainActivity.selectedNote.getText());
+        title.setText(Notes.getSelected().getTitle());
+        text.setText(Notes.getSelected().getText());
 
         this.listeners();
     }
@@ -51,7 +51,7 @@ public class EditNote extends AppCompatActivity {
         btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Notes.deleteNote(MainActivity.mapNoteObject.get(title.getText().toString()));
+                Notes.deleteNote(Notes.getSelected());
                 startActivity(new Intent(EditNote.this, MainActivity.class));
             }
         });

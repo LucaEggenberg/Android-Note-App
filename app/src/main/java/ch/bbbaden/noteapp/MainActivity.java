@@ -26,15 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView lv;
     private Button newNote;
 
-    public static Note selectedNote;
-
-    private String selected;
-
-    public static HashMap<String, Note> mapNoteObject = new HashMap<>();
-    private ArrayList<Note> modelNotes;
-
     private SimpleAdapter adapter;
-    public HashMap<String, String> mapNotes = new HashMap<>();
     private List<HashMap<String, String>> listItems = new ArrayList<>();
 
 
@@ -44,13 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         lv = (ListView) findViewById(R.id.listView);
-        modelNotes = Notes.getNotes();
         newNote = findViewById(R.id.btnNewNote);
-
-        for (Note n : modelNotes) {
-            mapNotes.put(n.getTitle(), n.getText());
-            mapNoteObject.put(n.getTitle(), n);
-        }
 
         newNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,12 +53,13 @@ public class MainActivity extends AppCompatActivity {
                 R.layout.activity_main_listview, new String[]{"First Line", "Second Line"},
                 new int[]{R.id.text1, R.id.text2});
 
-        Iterator it = mapNotes.entrySet().iterator();
-        while(it.hasNext()){
-            HashMap<String,String> resultMap = new HashMap<>();
-            Map.Entry pair = (Map.Entry)it.next();
-            resultMap.put("First Line", pair.getKey().toString());
-            resultMap.put("Second Line", pair.getValue().toString());
+        ArrayList<Note> tempNotes = new ArrayList<>();
+
+        tempNotes = Notes.getNotes();
+        for(Note n : tempNotes){
+            HashMap<String, String> resultMap = new HashMap<>();
+            resultMap.put("First Line", n.getTitle());
+            resultMap.put("Second Line", n.getText());
             listItems.add(resultMap);
         }
         lv.setAdapter(adapter);
@@ -80,7 +67,12 @@ public class MainActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Allahuakbar", Integer.toString(position));
+                for(Note n : Notes.getNotes()){
+                    if(n.getTitle().equals(listItems.get(position).get("First Line"))) {
+                        Notes.setSelected(n);
+                    }
+                }
+                startActivity(new Intent(MainActivity.this, EditNote.class));
             }
         });
     }
