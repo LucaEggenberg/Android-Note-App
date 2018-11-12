@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">NoteApp</string>
+    <string name="note_german">Titel</string>
+    <string name="description_german">Text</string>
+    <string name="add_note_german">Neue Notiz</string>
+    <string name="save_changes_german">Änderungen speichern</string>
+    <string name="cancel_german">Abbrechen</string>
+    <string name="delete_german">Notiz löschen</string>
+    <string name="new_note">Neue Notiz</string>
+</resources>
