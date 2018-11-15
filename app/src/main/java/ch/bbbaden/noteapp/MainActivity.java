@@ -1,6 +1,8 @@
 package ch.bbbaden.noteapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,27 +27,43 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView lv;
     private Button newNote;
+    private Notes notes;
+    public MainActivity(){
+        super();
+
+    }
+    private static Context context;
+    public static Context get() {
+        return context;
+    }
 
     private SimpleAdapter adapter;
     private List<HashMap<String, String>> listItems = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        context = getApplicationContext();
+        notes = Notes.getInstance();
         lv = (ListView) findViewById(R.id.listView);
         newNote = findViewById(R.id.btnNewNote);
 
         newNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, NewNote.class));
+                switchTo(new Intent(MainActivity.this, NewNote.class));
             }
         });
 
         this.listView();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        listView();
     }
 
     private void listView(){
@@ -53,9 +71,11 @@ public class MainActivity extends AppCompatActivity {
                 R.layout.activity_main_listview, new String[]{"First Line", "Second Line"},
                 new int[]{R.id.text1, R.id.text2});
 
-        ArrayList<Note> tempNotes = new ArrayList<>();
+        listItems.clear();
 
-        tempNotes = Notes.getNotes();
+        List<Note> tempNotes = new ArrayList<Note>();
+        tempNotes = notes.getNotes();
+
         for(Note n : tempNotes){
             HashMap<String, String> resultMap = new HashMap<>();
             resultMap.put("First Line", n.getTitle());
@@ -67,14 +87,22 @@ public class MainActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                for(Note n : Notes.getNotes()){
+                for(Note n : notes.getNotes()){
                     if(n.getTitle().equals(listItems.get(position).get("First Line"))) {
-                        Notes.setSelected(n);
+                        notes.select(n);
                     }
                 }
-                startActivity(new Intent(MainActivity.this, EditNote.class));
+                switchTo(new Intent(MainActivity.this, EditNote.class));
             }
         });
+    }
+
+    private void switchTo(Intent intent){
+        startActivity(intent);
+    }
+
+    public Context getContext(){
+        return getApplicationContext();
     }
 }
 

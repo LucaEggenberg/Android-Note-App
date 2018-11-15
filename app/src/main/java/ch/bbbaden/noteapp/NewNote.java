@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 public class NewNote extends AppCompatActivity {
 
+    private Notes notes = Notes.getInstance();
     private EditText editText1, editText2;
     private Button btnAdd, btnCancel;
 
@@ -26,15 +27,17 @@ public class NewNote extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Notes.addNote(editText1.getText().toString(), editText2.getText().toString());
-                startActivity(new Intent(NewNote.this, MainActivity.class));
+                notes.addNote(new Note(editText1.getText().toString(), editText2.getText().toString()));
+                finish();
+                //startActivity(new Intent(NewNote.this, MainActivity.class));
             }
         });
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(NewNote.this, MainActivity.class));
+                finish();
+                //startActivity(new Intent(NewNote.this, MainActivity.class));
             }
         });
     }

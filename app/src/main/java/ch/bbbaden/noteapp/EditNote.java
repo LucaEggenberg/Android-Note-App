@@ -12,6 +12,7 @@ import java.util.Collections;
 
 public class EditNote extends AppCompatActivity {
 
+    private Notes notes = Notes.getInstance();
     private Button btnSave, btnCancel, btnDel;
     private EditText title, text;
 
@@ -27,8 +28,8 @@ public class EditNote extends AppCompatActivity {
         title = findViewById(R.id.editTextNote);
         text = findViewById(R.id.editTextDescr);
 
-        title.setText(Notes.getSelected().getTitle());
-        text.setText(Notes.getSelected().getText());
+        title.setText(notes.selectedNote().getTitle());
+        text.setText(notes.selectedNote().getText());
 
         this.listeners();
     }
@@ -37,22 +38,25 @@ public class EditNote extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Code missing
-
-                startActivity(new Intent(EditNote.this, MainActivity.class));
+                notes.deleteNote(notes.selectedNote());
+                notes.addNote(new Note(title.getText().toString(), text.getText().toString()));
+                finish();
+                //startActivity(new Intent(EditNote.this, MainActivity.class));
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(EditNote.this, MainActivity.class));
+                finish();
+                //startActivity(new Intent(EditNote.this, MainActivity.class));
             }
         });
         btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Notes.deleteNote(Notes.getSelected());
-                startActivity(new Intent(EditNote.this, MainActivity.class));
+                notes.deleteNote(notes.selectedNote());
+                finish();
+                //startActivity(new Intent(EditNote.this, MainActivity.class));
             }
         });
     }

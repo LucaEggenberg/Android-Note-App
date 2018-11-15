@@ -1,30 +1,41 @@
 package ch.bbbaden.noteapp;
 
-import org.w3c.dom.Node;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Notes {
-    private static ArrayList<Note> notes = new ArrayList<>();
-    private static Note selected;
 
-    public static ArrayList<Note> getNotes(){
-        return notes;
+    private DBHandler db = new DBHandler(MainActivity.get());
+    private static Notes instance;
+    private Note selected;
+
+    private Notes(){
     }
 
-    public static void addNote(String title, String text){
-        notes.add(new Note(title, text));
+    public static Notes getInstance(){
+        if (instance == null) instance = new Notes();
+        return instance;
     }
 
-    public static void deleteNote(Note note){
-        notes.remove(note);
+    public List<Note> getNotes(){
+        return db.getAllNotes();
     }
 
-    public static void setSelected(Note note){
+    public void deleteNote(Note note){
+        db.deleteNote(note);
+    }
+
+    public void select(Note note){
         selected = note;
     }
 
-    public static Note getSelected(){
+    public Note selectedNote(){
         return selected;
+    }
+
+    public void addNote(Note note){
+        db.addNote(note);
     }
 }
